@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (readonly, size, value)
+import Html.Attributes exposing (readonly, size, style, value)
 import Html.Events exposing (onClick, onInput)
 import Random
 
@@ -31,7 +31,7 @@ init _ =
     ( { firstVector = Vector 0 0 0
       , secondVector = Vector 0 0 0
       , resultInput = Vector "" "" ""
-      , status = "Good luck!"
+      , status = "Chào mừng bạn đã đến đây :D Hãy tính tích có hướng rồi nhập vào 3 ô trên nhé! Chúc bạn may mắn :3"
       }
     , Cmd.none
     )
@@ -43,17 +43,21 @@ init _ =
 
 view : Model -> Html Msg
 view model =
-    main_ []
-        [ div []
-            [ text "Vector a : "
+    main_
+        [ style "max-width" "500px"
+        , style "margin" "auto"
+        ]
+        [ h1 [] [ text "Luyện tập Tích có hướng" ]
+        , div []
+            [ text "Vec-tơ a : "
             , viewVector model.firstVector
             ]
         , div []
-            [ text "Vector b : "
+            [ text "Vec-tơ b : "
             , viewVector model.secondVector
             ]
         , div []
-            [ text "Result : "
+            [ text "[Vec-tơ a, Vec-tơ b] : "
             , div []
                 [ input
                     [ value model.resultInput.x
@@ -76,7 +80,7 @@ view model =
                 ]
             ]
         , div [] [ text model.status ]
-        , button [ onClick GenerateNew ] [ text "Generate" ]
+        , button [ onClick GenerateNew ] [ text "Tạo vec-tơ mới" ]
         ]
 
 
@@ -146,13 +150,13 @@ update msg model =
                 )
             of
                 ( Nothing, _, _ ) ->
-                    ( { model | status = "Invalid x input" }, Cmd.none )
+                    ( { model | status = "Không đọc được tọa độ x..." }, Cmd.none )
 
                 ( _, Nothing, _ ) ->
-                    ( { model | status = "Invalid y input" }, Cmd.none )
+                    ( { model | status = "Không đọc được tọa độ y..." }, Cmd.none )
 
                 ( _, _, Nothing ) ->
-                    ( { model | status = "Invalid z input" }, Cmd.none )
+                    ( { model | status = "Không đọc được tọa độ z..." }, Cmd.none )
 
                 ( Just xInput, Just yInput, Just zInput ) ->
                     update (CheckResult xInput yInput zInput) model
@@ -163,10 +167,10 @@ update msg model =
                     crossProduct model.firstVector model.secondVector
             in
             if xInput == correctAns.x && yInput == correctAns.y && zInput == correctAns.z then
-                ( { model | status = "You got it correct!" }, Cmd.none )
+                ( { model | status = "Đúng rồi bạn hiền! :D" }, Cmd.none )
 
             else
-                ( { model | status = "You did it wrong..." }, Cmd.none )
+                ( { model | status = "Hình như bạn nhân sai chỗ nào rồi..." }, Cmd.none )
 
         GenerateNew ->
             ( model, generateNumbers GenerateFirstVector )
@@ -185,7 +189,7 @@ update msg model =
                     ( { model
                         | secondVector = Vector a b c
                         , resultInput = Vector "" "" ""
-                        , status = "Good luck!"
+                        , status = "Đã tạo các vec-tơ mới!"
                       }
                     , Cmd.none
                     )
